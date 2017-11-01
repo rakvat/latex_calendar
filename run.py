@@ -68,19 +68,27 @@ def handle_event(event, event_type):
     global year_map
     label = get_data(event, "label")
     category = get_data(event, "category")
+    month = int(get_data(event, "month"))
     if not category in chosen_categories:
         return
     if event_type == "birthday":
         day = int(get_data(event, "day"))
-        month = int(get_data(event, "month"))
         entry_year = get_data(event, "year")
         if entry_year:
             label = label + " (" + str(year - int(entry_year)) + ")"
-        year_map[month][day].append(label)
+    elif event_type == "fixed_day_event":
+        day = int(get_data(event, "day"))
+    elif event_type == "nth_weekday_in_month_event":
+        n = int(get_data(event, "n"))
+        weekday = int(get_data(event, "weekday"))
+        day = calendar.Calendar(weekday).monthdayscalendar(year, month)[n][0]
+    elif event_type == "last_week_in_month_event":
+        weekday = int(get_data(event, "weekday"))
+        day = calendar.Calendar(weekday).monthdayscalendar(year, month)[-1][0]
+    year_map[month][day].append(label)
 
 
 def parse_xml():
-    # parse xml
     for file in glob.glob("input/*.xml"):
         print("importing", file)
         xmldoc = minidom.parse(file)
