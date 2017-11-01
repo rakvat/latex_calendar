@@ -3,7 +3,9 @@
 import sys
 import glob
 import calendar
+import os
 from calendar import monthrange
+from datetime import date
 from xml.dom import minidom
 
 import pdb
@@ -97,7 +99,7 @@ class LatexCalendar(calendar.Calendar):
     """
 
     START_CALENDAR = """\\documentclass[8pt, a4paper]{article}
-                        \\usepackage[german,ngerman]{babel}
+                        \\usepackage[utf8]{inputenc}
                         \\parindent 0mm
                         \\hoffset -3.3cm
                         \\textwidth 20cm
@@ -105,32 +107,45 @@ class LatexCalendar(calendar.Calendar):
 
                         \\begin{document}"""
     END_CALENDAR = "end{document}"
-    YEAR = "\\textbf{{\\huge{{Calendar for the Year {0}}}}}\\\\\\\\";
+    YEAR = "\\textbf{{\\huge{{Calendar for the Year %d}}}}\\\\\\\\";
 
-    MONTH_TITLE = "\\textbf{{\\large{{{0}}}}}\\\\\\\\";
+    MONTH_TITLE = "\\textbf{{\\large{{%s}}}}\\\\\\\\";
 
     MONTH_START = """\\begin{tabular*}{20cm}{|l|l|l|p{5cm}|l| }
                      \\hline
                      \\textbf{} & \\textbf{} & \\textbf{} & \\textbf{...}\\\\
                      \\hline
-                     \\hline"""
+                     \\hline\n"""
 
     MONTH_END = """\\end{tabular*}
-                   \\newpage"""
+                   \\newpage\n"""
 
-    ROW = "{0} & {1} & \\textbf{{{2}}} & \\tiny{{{3}}} & \\\\ \\hline"
-    WEEKEND = "\\hline"
+    ROW = "%d & %s & \\textbf{{%d}} & \\tiny{{%s}} & \\\\ \\hline\n"
+    WEEK_END = "\\hline\n"
 
     def format_year(self, the_year):
-        print(self.yeardayscalendar(the_year))
+        c = self.yeardayscalendar(the_year, 1)
         out = self.START_CALENDAR
-        for month in range(1, 12 + 1):
-            out += self.MONTH_TITLE
+        out += self.YEAR % the_year
+        for month_index, month in enumerate(c):
+            print(month_index)
+            print(month)
+            out += self.MONTH_TITLE % calendar.month_name[month_index + 1]
             out += self.MONTH_START
+            for week_index, week in enumerate(month[0]):
+                for weekday, day in enumerate(week):
+                    if day == 0:
+                        continue
+                    entries = ", ".join(year_map[month_index + 1][day])
+                    weekday_str = calendar.day_abbr[weekday]
+                    week_number = date(the_year, month_index + 1, day).isocalendar()[1]
+                    out += self.ROW % (week_number, weekday_str, day, entries)
+                    if weekday == 6:
+                        out += self.WEEK_END
             out += self.MONTH_END
         out += self.END_CALENDAR
 
-        print(out)
+        return out
 
 
 
@@ -153,7 +168,13 @@ def main():
 
     # create latex output
     c = LatexCalendar()
-    c.format_year(year)
+    base_file_name = "calendar_" + str(year)
+    latex_file = open("output/" + base_file_name + ".tex", "w")
+    latex_file.write(c.format_year(year))
+    latex_file.close()
+    os.system("cd output && latex -interaction=nonstopmode " + base_file_name + ".tex")
+    os.system("cd output && dvipdf " + base_file_name + ".dvi")
+    os.system("cd output && evince " + base_file_name + ".pdf")
 
 
 
