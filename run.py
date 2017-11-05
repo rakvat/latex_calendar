@@ -114,7 +114,7 @@ class LatexCalendar(calendar.Calendar):
                         \\pagestyle{empty}
 
                         \\begin{document}"""
-    END_CALENDAR = "end{document}"
+    END_CALENDAR = "\\end{document}"
     YEAR = "\\textbf{{\\huge{{Calendar for the Year %d}}}}\\\\\\\\";
 
     MONTH_TITLE = "\\textbf{{\\large{{%s}}}}\\\\\\\\";
@@ -132,12 +132,10 @@ class LatexCalendar(calendar.Calendar):
     WEEK_END = "\\hline\n"
 
     def format_year(self, the_year):
-        c = self.yeardayscalendar(the_year, 1)
+        our_calendar = self.yeardayscalendar(the_year, 1)
         out = self.START_CALENDAR
         out += self.YEAR % the_year
-        for month_index, month in enumerate(c):
-            print(month_index)
-            print(month)
+        for month_index, month in enumerate(our_calendar):
             out += self.MONTH_TITLE % calendar.month_name[month_index + 1]
             out += self.MONTH_START
             for week_index, week in enumerate(month[0]):
@@ -172,7 +170,6 @@ def main():
 
     init_year_map()
     parse_xml()
-    print(year_map)
 
     # create latex output
     c = LatexCalendar()
