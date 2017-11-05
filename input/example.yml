@@ -1,0 +1,35 @@
+calendar_entries:
+  birthdays:
+    -
+      category: fun
+      day: 7
+      month: 10
+      year: 1975
+      label: "Tim Minchin"
+
+  fixed_day_events:
+    -
+      category: world
+      day: 25
+      month: 5
+      label: "Towel Day"
+
+  nth_weekday_in_month_events:
+    -
+      category: world
+      n: 1
+      weekday: 6
+      month: 5
+      label: "World Laughter Day"
+
+  last_week_in_month_events:
+    -
+      category: time
+      weekday: 6
+      month: 3
+      label: "CET -> CEST (one hour forward)"
+    -
+      category: time
+      weekday: 6
+      month: 10
+      label: "CEST -> CET (one hour back)"

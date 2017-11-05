@@ -24,8 +24,6 @@ def main():
 
     # use Latex calendar
     latex_calendar = mycalendar.LatexCalendar()
-    print(INPUT_DATA_FOLDER)
-    print(year)
 
     latex_calendar.process_input_data(INPUT_DATA_FOLDER, year)
     output = latex_calendar.format_year(year)
