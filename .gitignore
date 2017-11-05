@@ -1,3 +1,4 @@
 input/*
 !input/example.yml
-output
+output/*
+!output/.gitkeep
