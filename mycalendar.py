@@ -152,4 +152,3 @@ class LatexCalendar(calendar.Calendar):
         out += self.END_CALENDAR
 
         return out
-
