@@ -4,7 +4,6 @@ import sys
 import calendar
 import os
 
-sys.path.append("Lib")
 import mycalendar
 
 
