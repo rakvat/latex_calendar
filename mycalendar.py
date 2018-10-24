@@ -132,13 +132,13 @@ class LatexCalendar(calendar.Calendar):
         self.input_data.init_year_map(year)
         self.input_data.parse_yaml(folder, year)
 
-    def format_year(self, year):
+    def generate_calendar(self, year):
         our_calendar = self.yeardayscalendar(year, 1)
-        out = self.START_CALENDAR
-        out += self.YEAR % year
+        yield self.START_CALENDAR
+        yield self.YEAR % year
         for month_index, month in enumerate(our_calendar):
-            out += self.MONTH_TITLE % calendar.month_name[month_index + 1]
-            out += self.MONTH_START
+            yield self.MONTH_TITLE % calendar.month_name[month_index + 1]
+            yield self.MONTH_START
             for week in month[0]:
                 for weekday, day in enumerate(week):
                     if day == 0:
@@ -149,10 +149,12 @@ class LatexCalendar(calendar.Calendar):
                         entries = ""
                     weekday_str = calendar.day_abbr[weekday]
                     week_number = date(year, month_index + 1, day).isocalendar()[1]
-                    out += self.ROW % (week_number, weekday_str, day, entries)
+                    yield self.ROW % (week_number, weekday_str, day, entries)
                     if weekday == 6:
-                        out += self.WEEK_END
-            out += self.MONTH_END
-        out += self.END_CALENDAR
+                        yield self.WEEK_END
+            yield self.MONTH_END
+        yield self.END_CALENDAR
 
-        return out
+    def format_year(self, year):
+        out = self.generate_calendar(year)
+        return ''.join(out)
