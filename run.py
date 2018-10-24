@@ -1,7 +1,8 @@
 #!/usr/bin/python3
 
+""" Entry point of LatexCalendar. """
+
 import sys
-import calendar
 import os
 
 import mycalendar
@@ -32,7 +33,9 @@ def main():
     latex_file = open(OUTPUT_DATA_FOLDER + "/" + base_file_name + ".tex", "w")
     latex_file.write(output)
     latex_file.close()
-    os.system("cd " + OUTPUT_DATA_FOLDER + " && latex -interaction=nonstopmode " + base_file_name + ".tex")
+    os.system(
+        "cd " + OUTPUT_DATA_FOLDER + " && latex -interaction=nonstopmode " + base_file_name + ".tex"
+    )
     os.system("cd " + OUTPUT_DATA_FOLDER + " && dvipdf " + base_file_name + ".dvi")
     os.system("cd " + OUTPUT_DATA_FOLDER + " && evince " + base_file_name + ".pdf")
 
