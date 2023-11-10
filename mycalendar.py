@@ -41,10 +41,14 @@ class LatexCalendarData:
         elif event_type == "nth_weekday_in_month_events":
             nth_weekday = int(self.get_data(event, "n"))
             weekday = int(self.get_data(event, "weekday"))
-            day = calendar.Calendar(weekday).monthdayscalendar(year, month)[nth_weekday][0]
+            cal = calendar.Calendar().monthdayscalendar(year, month)
+            index = (0 if cal[0][weekday] != 0 else 1) + nth_weekday - 1
+            day = cal[index][weekday]
         elif event_type == "last_week_in_month_events":
             weekday = int(self.get_data(event, "weekday"))
-            day = calendar.Calendar(weekday).monthdayscalendar(year, month)[-1][0]
+            cal = calendar.Calendar().monthdayscalendar(year, month)
+            index = (-1 if cal[-1][weekday] != 0 else -2)
+            day = cal[index][weekday]
         self.year_map[month][day].append(label)
 
 
