@@ -115,7 +115,7 @@ class LatexCalendar(calendar.Calendar):
 
                         \\begin{document}"""
     END_CALENDAR = "\\end{document}"
-    YEAR = "\\textbf{{\\huge{{Calendar for the Year %d}}}}\\\\\\\\"
+    YEAR = "\\textbf{{\\huge{{Calendar of the Year %d}}}}\\\\\\\\"
 
     MONTH_TITLE = "\\textbf{{\\large{{%s}}}}\\\\\\\\"
 
